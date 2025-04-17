@@ -5,7 +5,7 @@ class Pokemon {
   List ability;
   int height;
   int weight;
-  int baseStat;
+  List baseStat;
 
   Pokemon({
     required this.pokemonName,

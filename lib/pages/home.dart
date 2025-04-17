@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poke_team_builder/components/drawer.dart';
 import 'package:poke_team_builder/components/pokemon_card.dart';
 import 'package:poke_team_builder/models/pokemon.dart';
 import 'package:poke_team_builder/utils/fetch_data.dart';
@@ -13,7 +14,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Pokemon? pokemon;
   final _controller = TextEditingController();
-  String textState = "";
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,21 @@ class _HomeState extends State<Home> {
             style: TextStyle(color: Colors.white),
           ),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: [
+          Builder(
+            builder:
+                (context) => IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  icon: Icon(Icons.menu, color: Colors.white),
+                ),
+          ),
+        ],
         backgroundColor: Colors.blue[700],
       ),
+      endDrawer: MyDrawer(),
       backgroundColor: Colors.blue,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -45,7 +58,7 @@ class _HomeState extends State<Home> {
           ),
           SizedBox(height: 24),
           Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24),
+            padding: const EdgeInsets.only(left: 48, right: 24),
             child: Row(
               children: [
                 Expanded(
@@ -84,7 +97,7 @@ class _HomeState extends State<Home> {
                         ability: data['abilities'],
                         height: data['height'],
                         weight: data['weight'],
-                        baseStat: data['stats'][0]['base_stat'],
+                        baseStat: data['stats'],
                       );
                       setState(() {
                         pokemon = newPokemon;
