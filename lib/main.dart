@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:poke_team_builder/models/pokemon.dart';
 import 'package:poke_team_builder/pages/home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(PokemonAdapter());
+  await Hive.openBox<Pokemon>('myTeam');
+
   runApp(const MyApp());
 }
 

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:poke_team_builder/models/pokemon.dart';
 import 'package:poke_team_builder/pages/poke_detail.dart';
+import 'package:poke_team_builder/utils/add_to_team.dart';
 import 'package:poke_team_builder/utils/string_capitalize.dart';
 
-class PokemonCard extends StatelessWidget {
+class PokemonCard extends StatefulWidget {
   final Pokemon pokemon;
 
   const PokemonCard({super.key, required this.pokemon});
 
   @override
-  Widget build(BuildContext context) {
-    // String capitalize(String s) {
-    //   return s[0].toUpperCase() + s.substring(1);
-    // }
+  State<PokemonCard> createState() => _PokemonCardState();
+}
 
+class _PokemonCardState extends State<PokemonCard> {
+  @override
+  Widget build(BuildContext context) {
     return Card(
       color: Colors.amber[400],
       child: Stack(
@@ -29,7 +32,35 @@ class PokemonCard extends StatelessWidget {
               width: 28,
               height: 28,
               child: IconButton(
-                onPressed: () {}, // todo => implement function to add to Team
+                // onPressed: () async {
+                //   final box = Hive.box<Pokemon>('myTeam');
+                //   final alreadyInTeam = box.values.any(
+                //     (pokemon) =>
+                //         pokemon.pokemonName == widget.pokemon.pokemonName,
+                //   );
+
+                //   if (alreadyInTeam) {
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       SnackBar(
+                //         content: Text(
+                //           '${capitalize(widget.pokemon.pokemonName)} is already in the Team',
+                //         ),
+                //       ),
+                //     );
+                //   } else {
+                //     await box.add(widget.pokemon);
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       SnackBar(
+                //         content: Text(
+                //           '${capitalize(widget.pokemon.pokemonName)} is now on your Team!',
+                //         ),
+                //       ),
+                //     );
+                //   }
+                // }, // todo => implement function to add to Team
+                onPressed: () {
+                  addPokeToTeam(widget.pokemon, context);
+                },
                 icon: Icon(Icons.add, size: 20, color: Colors.white),
                 padding: EdgeInsets.zero,
               ),
@@ -45,11 +76,15 @@ class PokemonCard extends StatelessWidget {
                     border: Border.all(color: Colors.blue, width: 2),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Image.network(pokemon.sprite, height: 100, width: 100),
+                  child: Image.network(
+                    widget.pokemon.sprite,
+                    height: 100,
+                    width: 100,
+                  ),
                 ),
                 SizedBox(height: 6),
                 Text(
-                  capitalize(pokemon.pokemonName),
+                  capitalize(widget.pokemon.pokemonName),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 18,
@@ -61,7 +96,8 @@ class PokemonCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PokemonDetail(pokemon: pokemon),
+                        builder:
+                            (context) => PokemonDetail(pokemon: widget.pokemon),
                       ),
                     );
                   }, //push to pokemon detail page

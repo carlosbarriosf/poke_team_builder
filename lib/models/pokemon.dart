@@ -1,11 +1,29 @@
-class Pokemon {
+import 'package:hive/hive.dart';
+
+part 'pokemon.g.dart';
+
+@HiveType(typeId: 0)
+class Pokemon extends HiveObject {
+  @HiveField(0)
   String pokemonName;
+
+  @HiveField(1)
   String sprite;
-  List types;
-  List ability;
+
+  @HiveField(2)
+  List<dynamic> types;
+
+  @HiveField(3)
+  List<dynamic> ability;
+
+  @HiveField(4)
   int height;
+
+  @HiveField(5)
   int weight;
-  List baseStat;
+
+  @HiveField(6)
+  List<dynamic> baseStat;
 
   Pokemon({
     required this.pokemonName,
