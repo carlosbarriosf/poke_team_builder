@@ -30,6 +30,7 @@ class MyDrawer extends StatelessWidget {
 
           MaterialButton(
             onPressed: () {
+              Navigator.of(context).pop();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Home()),
@@ -49,6 +50,7 @@ class MyDrawer extends StatelessWidget {
 
           MaterialButton(
             onPressed: () {
+              Navigator.of(context).pop();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyPokeTeam()),
