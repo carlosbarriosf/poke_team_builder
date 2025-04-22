@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:poke_team_builder/components/drawer.dart';
 import 'package:poke_team_builder/models/pokemon.dart';
+import 'package:poke_team_builder/utils/add_to_team.dart';
 import 'package:poke_team_builder/utils/string_capitalize.dart';
 
-class PokemonDetail extends StatelessWidget {
+class PokemonDetail extends StatefulWidget {
   final Pokemon pokemon;
   const PokemonDetail({super.key, required this.pokemon});
 
   @override
+  State<PokemonDetail> createState() => _PokemonDetailState();
+}
+
+class _PokemonDetailState extends State<PokemonDetail> {
+  @override
   Widget build(BuildContext context) {
+    final box = Hive.box<Pokemon>('myTeam');
+    bool alreadyInTeam = box.values.any(
+      (storedPokemon) =>
+          storedPokemon.pokemonName == widget.pokemon.pokemonName,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          capitalize(pokemon.pokemonName),
+          capitalize(widget.pokemon.pokemonName),
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: IconThemeData(color: Colors.white),
@@ -45,7 +58,7 @@ class PokemonDetail extends StatelessWidget {
                     height: 40,
                     alignment: Alignment.center,
                     child: Text(
-                      capitalize(pokemon.pokemonName),
+                      capitalize(widget.pokemon.pokemonName),
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -61,7 +74,11 @@ class PokemonDetail extends StatelessWidget {
                     height: 250,
                     child: Stack(
                       children: [
-                        Image.network(pokemon.sprite, scale: 0.5, width: 400),
+                        Image.network(
+                          widget.pokemon.sprite,
+                          scale: 0.5,
+                          width: 400,
+                        ),
                         Positioned(
                           bottom: 4,
                           right: 4,
@@ -81,7 +98,7 @@ class PokemonDetail extends StatelessWidget {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  ...pokemon.types.map((type) {
+                                  ...widget.pokemon.types.map((type) {
                                     return Padding(
                                       padding: const EdgeInsets.only(left: 4),
                                       child: Text(
@@ -117,7 +134,7 @@ class PokemonDetail extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'Weight: ${pokemon.weight.toString()}',
+                              'Weight: ${widget.pokemon.weight.toString()}',
                               style: TextStyle(
                                 color: Colors.blue[700],
                                 fontSize: 16,
@@ -134,7 +151,7 @@ class PokemonDetail extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              'Height: ${pokemon.height.toString()}',
+                              'Height: ${widget.pokemon.height.toString()}',
                               style: TextStyle(
                                 color: Colors.blue[700],
                                 fontSize: 16,
@@ -188,7 +205,7 @@ class PokemonDetail extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: 12),
-                                ...pokemon.ability.map((ability) {
+                                ...widget.pokemon.ability.map((ability) {
                                   return Text(
                                     capitalize(ability['ability']['name']),
                                     style: TextStyle(
@@ -220,7 +237,7 @@ class PokemonDetail extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: 12),
-                                ...pokemon.baseStat.map((stat) {
+                                ...widget.pokemon.baseStat.map((stat) {
                                   return Text(
                                     '${capitalize(stat['stat']['name'])}: ${stat['base_stat']}',
                                     style: TextStyle(
@@ -244,13 +261,46 @@ class PokemonDetail extends StatelessWidget {
           //Add to team button
           Container(
             decoration: BoxDecoration(
-              color: Colors.blue[300],
+              color: alreadyInTeam ? Colors.red[900] : Colors.blue[300],
               borderRadius: BorderRadius.circular(8),
             ),
             child: MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                if (alreadyInTeam) {
+                  final keyToDelete = box.keys.firstWhere(
+                    (key) =>
+                        box.get(key)?.pokemonName == widget.pokemon.pokemonName,
+                    orElse: () => null,
+                  );
+                  if (keyToDelete != null) {
+                    setState(() {
+                      box.delete(keyToDelete);
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Center(
+                          child: Text(
+                            '${capitalize(widget.pokemon.pokemonName)} is no longer in the Team.',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        backgroundColor: Colors.blue[700],
+                      ),
+                    );
+                  }
+                } else {
+                  setState(() {
+                    addPokeToTeam(widget.pokemon, context);
+                  });
+                }
+              },
               child: Text(
-                'Add to my team',
+                alreadyInTeam ? 'Remove from Team' : 'Add to my Team',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
