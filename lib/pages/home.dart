@@ -19,10 +19,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(
-          child: Text(
-            'Pokémon Team Builder',
-            style: TextStyle(color: Colors.white),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 32),
+            child: Text(
+              'Pokémon Team Builder',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
         iconTheme: IconThemeData(color: Colors.white),
@@ -43,7 +47,6 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.blue,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 48),
           Center(child: Image.asset('assets/pokelogo.png')),

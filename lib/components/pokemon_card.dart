@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:poke_team_builder/models/pokemon.dart';
 import 'package:poke_team_builder/pages/poke_detail.dart';
 import 'package:poke_team_builder/utils/add_to_team.dart';
@@ -32,32 +31,6 @@ class _PokemonCardState extends State<PokemonCard> {
               width: 28,
               height: 28,
               child: IconButton(
-                // onPressed: () async {
-                //   final box = Hive.box<Pokemon>('myTeam');
-                //   final alreadyInTeam = box.values.any(
-                //     (pokemon) =>
-                //         pokemon.pokemonName == widget.pokemon.pokemonName,
-                //   );
-
-                //   if (alreadyInTeam) {
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       SnackBar(
-                //         content: Text(
-                //           '${capitalize(widget.pokemon.pokemonName)} is already in the Team',
-                //         ),
-                //       ),
-                //     );
-                //   } else {
-                //     await box.add(widget.pokemon);
-                //     ScaffoldMessenger.of(context).showSnackBar(
-                //       SnackBar(
-                //         content: Text(
-                //           '${capitalize(widget.pokemon.pokemonName)} is now on your Team!',
-                //         ),
-                //       ),
-                //     );
-                //   }
-                // }, // todo => implement function to add to Team
                 onPressed: () {
                   addPokeToTeam(widget.pokemon, context);
                 },

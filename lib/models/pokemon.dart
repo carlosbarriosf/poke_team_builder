@@ -35,15 +35,3 @@ class Pokemon extends HiveObject {
     required this.baseStat,
   });
 }
-
-// class Types {
-//   final List<Map<dynamic, dynamic>> types;
-
-//   Types({required this.types});
-// }
-
-// class Abilities {
-//   final List<Map<dynamic, dynamic>> abilities;
-
-//   Abilities({required this.abilities});
-// }
